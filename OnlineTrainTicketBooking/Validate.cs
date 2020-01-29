@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace OnlineTrainTicketBooking
 {
-   public class Validate
+    public class Validate
     {
         //Validates Integer Value
         public static int ValidateInteger(string input)
@@ -46,8 +46,9 @@ namespace OnlineTrainTicketBooking
             bool status;
             do
             {
+                Regex phoneNumberValidator = new Regex("^[0-9]{10}$");
                 status = long.TryParse(input, out result);
-                if (!status || input.Length < 10)
+                if (!status || phoneNumberValidator.IsMatch(input))
                 {
                     Console.WriteLine("Enter a valid  Mobile Number");
                     input = Console.ReadLine();
@@ -77,11 +78,9 @@ namespace OnlineTrainTicketBooking
         public static string ValidateMailId(string input)
         {
             // This Pattern is use to verify the email 
-            string strRegex = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
+            Regex emailIdValidator = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
 
-            Regex re = new Regex(strRegex, RegexOptions.IgnoreCase);
-
-            if (re.IsMatch(input))
+            if (emailIdValidator.IsMatch(input))
                 return input;
             else
             {
@@ -106,7 +105,8 @@ namespace OnlineTrainTicketBooking
                 return true;
             }
         }
-        //Verifies the Train Number
+
+        //Method Verifies the Train Number
         public static string CheckTrainNumber(string trainNumber)
         {
             bool status;
@@ -122,6 +122,35 @@ namespace OnlineTrainTicketBooking
                 }
             } while (!status);
             return null;
+        }
+
+
+        //Method for Securing Password
+        public static string SecurePassword()
+        {
+            string password = "";
+            ConsoleKeyInfo input;
+            do
+            {
+                input = Console.ReadKey(true);
+                if (input.Key != ConsoleKey.Backspace && input.Key != ConsoleKey.Enter)
+                {
+                    password += input.KeyChar;
+                    Console.Write("*");
+                }
+                else
+                {
+                    if (input.Key == ConsoleKey.Backspace && password.Length > 0)
+                    {
+                        password = password.Substring(0, (password.Length - 1));
+                        Console.Write("\b \b");
+                    }
+                }
+            }
+            while (input.Key != ConsoleKey.Enter);
+            Console.WriteLine();
+
+            return password;
         }
 
     }

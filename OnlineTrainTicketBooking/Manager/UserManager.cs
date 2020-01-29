@@ -5,6 +5,8 @@ namespace OnlineTrainTicketBooking
     class UserManager
     {
         UserRepository userRepository = new UserRepository();
+
+
         //Getting User Detail for Signing Up
         public void RegisterUser()
         {
@@ -17,7 +19,7 @@ namespace OnlineTrainTicketBooking
                 Console.Write("Enter your Mobile Number : ");
                 long mobileNumber = Validate.ValidateMobileNumber(Console.ReadLine());
 
-                Console.Write("Enter your Date of Birth : ");
+                Console.Write("Enter your Date of Birth [YYYY/MM/DD]: ");
                 DateTime dateOfBirth = Validate.ValidateDob(Console.ReadLine());
 
 
@@ -31,14 +33,14 @@ namespace OnlineTrainTicketBooking
                 } while (!status);
 
                 Console.Write("Enter a Password         :");
-                string password = Console.ReadLine();
+                string password = Validate.SecurePassword();
 
                 userRepository.Register(mailId, new User(userName, password, dateOfBirth, mobileNumber));
                 Console.WriteLine("[INFO] --Successfully Registered!!!");
             }
             catch(NullReferenceException exception)
             {
-                Console.WriteLine("[WARN]  --User Detai Cannot be Null\n",exception.Message);
+                Console.WriteLine("[WARN]  User Detai Cannot be Null\n",exception.Message);
             }
         }
 
@@ -46,31 +48,39 @@ namespace OnlineTrainTicketBooking
         //Used for Login operation
         public void Login()
         {
-            Console.WriteLine("\n*************Welcome to Login Page************");
-            Console.Write("Enter your User Id   :");
-            string userId = Console.ReadLine();
-            Console.Write("Enter your Password  :");
-            string password = Console.ReadLine();
-
-            if (userRepository.CheckLoginCredentials(userId, password))  //Calls the CheckLoginCredential to verify the Account
+            try
             {
-                Console.WriteLine("\n[INFO] --Successfully Logged In");
-                if (HomePage.adminStatus)
+
+                Console.WriteLine("\n*************Welcome to Login Page************");
+                Console.Write("Enter your User Id   :");
+                string userId = Console.ReadLine();
+                Console.Write("Enter your Password  :");
+                string password = Validate.SecurePassword();
+
+                if (userRepository.CheckLoginCredentials(userId, password))  //Calls the CheckLoginCredential to verify the Account
                 {
-                    Console.WriteLine("\n*******Welcome Admin*********");
-                    LoginManager.AdminOptions();
+                    Console.WriteLine("\n[INFO]    Successfully Logged In");
+                    if (HomePage.adminStatus)
+                    {
+                        Console.WriteLine("\n*******Welcome Admin*********");
+                        LoginManager.AdminOptions();
+                    }
+                    else
+                    {
+                        Console.WriteLine("\n********Welcome Guest******");
+                        LoginManager.UserBookingOptions();
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("\n********Welcome Guest******");
-                    LoginManager.UserBookingOptions();
+                    Console.WriteLine("[WARN]  Invalid Login Credentials!!!!");
                 }
+
             }
-            else
+            catch (Exception exception)
             {
-                Console.WriteLine("[WARN]  --Invalid Login Credentials!!!!");
+                Console.WriteLine(exception.Message);
             }
         }
-
     }
 }

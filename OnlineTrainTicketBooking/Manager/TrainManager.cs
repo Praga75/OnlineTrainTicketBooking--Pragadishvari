@@ -8,15 +8,36 @@ namespace OnlineTrainTicketBooking
 
         public void SearchTrain()
         {
-            trainRepository = new TrainRepository();
-            Console.WriteLine("Enter the Source Location      :");
-            string sourceCity = Console.ReadLine();
-            Console.WriteLine("Enter the Destination Location :");
-            string destinationCity = Console.ReadLine();
-            trainRepository.SearchTrain(sourceCity,destinationCity);
-            Console.WriteLine("Press any key to Book the Ticket");
-            Console.ReadKey();
-            BookTicket();
+            try
+            {
+
+                trainRepository = new TrainRepository();
+                Console.WriteLine("Enter the Source Location      :");
+                string sourceCity = Console.ReadLine();
+                Console.WriteLine("Enter the Destination Location :");
+                string destinationCity = Console.ReadLine();
+                trainRepository.SearchTrain(sourceCity, destinationCity);
+
+                Console.WriteLine("[INFO]\n1)TO Book the Ticket\n2)Exit");
+                int choice = Validate.ValidateInteger(Console.ReadLine());
+                switch (choice)
+                {
+                    case 1:
+                        BookTicket();
+                        break;
+                    case 2:
+                        break;
+                    default:
+                        Console.WriteLine("[WARN] Please Enter valid choice");
+                        break;
+                }
+
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
+
         }
 
         public void BookTicket()
@@ -146,7 +167,5 @@ namespace OnlineTrainTicketBooking
             string trainNumber = Validate.CheckTrainNumber(Console.ReadLine());
             trainRepository.SearchTrainList(trainNumber);
         }
-
-
     }
 }

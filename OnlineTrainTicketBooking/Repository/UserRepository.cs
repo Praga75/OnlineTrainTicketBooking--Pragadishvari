@@ -22,20 +22,28 @@ namespace OnlineTrainTicketBooking
         //Checks the Login credentials
         public bool CheckLoginCredentials(string loginId, string password)
         {
-            if (loginId == AdminId && password == AdminPassword) //Checks for Admin
+            try
             {
-                HomePage.adminStatus = true;
-                HomePage.LoggedInStatus = true;
-                return true;
-            }
-            else if (UserRepository.userCredential.ContainsKey(loginId)) //Checks for User
-            {
-                if (UserRepository.userCredential[loginId].Password == password)
+                if (loginId == AdminId && password == AdminPassword) //Checks for Admin
                 {
+                    HomePage.adminStatus = true;
                     HomePage.LoggedInStatus = true;
-                    LoggedInUserId = loginId;
                     return true;
                 }
+                else if (UserRepository.userCredential.ContainsKey(loginId)) //Checks for User
+                {
+                    if (UserRepository.userCredential[loginId].Password == password)
+                    {
+                        HomePage.LoggedInStatus = true;
+                        LoggedInUserId = loginId;
+                        return true;
+                    }
+                }
+             
+            }
+            catch
+            {
+                Console.WriteLine("[INFO]  Values Cannot be Null");
             }
             return false;
         }

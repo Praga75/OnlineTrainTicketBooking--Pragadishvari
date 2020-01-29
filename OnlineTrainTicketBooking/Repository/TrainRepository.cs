@@ -17,22 +17,32 @@ namespace OnlineTrainTicketBooking
             traindetails.Add("12007", new Train("Shatabthi Express", 270.50, "coimbatore", "chennai", 100));
         }
 
-        public void SearchTrain(string src, string dest)
+        //Method to search the Train
+        public void SearchTrain(string source, string destination) 
         {
-            foreach (KeyValuePair<string, Train> values in TrainRepository.traindetails)
+            try
             {
-                if (values.Value.SourceCity == src && values.Value.DestinationCity == dest)
+                foreach (KeyValuePair<string, Train> values in TrainRepository.traindetails)
                 {
-                    Console.WriteLine(values.Key + "\t" + values.Value.TrainName
-                        + "\t" + values.Value.TicketPrice + "\t" + values.Value.SourceCity + "\t" +
-                        values.Value.DestinationCity + "\t" + values.Value.TicketsAvailable);
+                    if (values.Value.SourceCity == source && values.Value.DestinationCity == destination)
+                    {
+                        Console.WriteLine(values.Key + "\t" + values.Value.TrainName
+                            + "\t" + values.Value.TicketPrice + "\t" + values.Value.SourceCity + "\t" +
+                            values.Value.DestinationCity + "\t" + values.Value.TicketsAvailable);
+                    }
                 }
             }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
+            
         }
 
+        //Updates Number of Tickets
         public void UpdateTicket(string trainNumber, int count)
         {
-            if (count < traindetails[trainNumber].TicketsAvailable)
+            if (count < traindetails[trainNumber].TicketsAvailable && count>0)
             {
                 traindetails[trainNumber].TicketsAvailable -= count;
             }
@@ -68,6 +78,9 @@ namespace OnlineTrainTicketBooking
                 case 5:
                     traindetails[trainNumber].TicketsAvailable = Validate.ValidateInteger(value);
                     break;
+                default:
+                    Console.WriteLine("[WARN]   Please Enter a Valid Choice");
+                    break;
             }
             Console.WriteLine("One Item Updated Successfully");
         }
@@ -75,8 +88,15 @@ namespace OnlineTrainTicketBooking
         //Delete the TrainDetail
         public void DeleteTrainDetail(string trainNumber)
         {
-            traindetails.Remove(trainNumber);
-            Console.WriteLine("One Item Deleted Successfully");
+            try
+            {
+                traindetails.Remove(trainNumber);
+                Console.WriteLine("One Item Deleted Successfully");
+            }
+            catch 
+            {
+                Console.WriteLine("[INFO]   Verify Train Number");
+            }
         }
 
         //Display the TrainDetail
@@ -93,12 +113,20 @@ namespace OnlineTrainTicketBooking
         //Search the TrainDetail
         public void SearchTrainList(string trainNumber)
         {
-            Console.WriteLine("\nTrainNumber\tTrainName\tTicketPrice\tSource\tDestination\tTicketsAvailable");
-            if (traindetails.ContainsKey(trainNumber))
+            try
             {
-                Console.WriteLine(traindetails[trainNumber].TrainName
-                     + "\t" + traindetails[trainNumber].TicketPrice + "\t" + traindetails[trainNumber].SourceCity +
-                     "\t" + traindetails[trainNumber].DestinationCity + "\t" + traindetails[trainNumber].TicketsAvailable);
+                Console.WriteLine("\nTrainNumber\tTrainName\tTicketPrice\tSource\tDestination\tTicketsAvailable");
+                if (traindetails.ContainsKey(trainNumber))
+                {
+                    Console.WriteLine(traindetails[trainNumber].TrainName
+                         + "\t" + traindetails[trainNumber].TicketPrice + "\t" + traindetails[trainNumber].SourceCity +
+                         "\t" + traindetails[trainNumber].DestinationCity + "\t" + traindetails[trainNumber].TicketsAvailable);
+                }
+
+            }
+            catch
+            {
+                Console.WriteLine("[INFO]   Verify Train Number");
             }
         }
 

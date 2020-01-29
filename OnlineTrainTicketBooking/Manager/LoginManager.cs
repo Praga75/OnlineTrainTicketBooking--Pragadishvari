@@ -9,7 +9,7 @@ namespace OnlineTrainTicketBooking
             TrainManager trainManager = new TrainManager();
             while (HomePage.LoggedInStatus)
             {
-                Console.WriteLine("\n[Select a option]\n1)Book Ticket\n2)Search Train Availability\n3)Display Booking Detail\n4)Exit");
+                Console.WriteLine("\n[Select a option]\n1)Book Ticket\n2)Search Train Availability\n3)Display Booking Detail\n4)Cancel Booking\n5)Exit");
                 int choice = Validate.ValidateInteger(Console.ReadLine());
                 switch (choice)
                 {
@@ -28,12 +28,15 @@ namespace OnlineTrainTicketBooking
                         trainManager.SearchTrain();
                         break;
                     case 3:
-                        PassengerRepository.Display();
+                        PassengerRepository.DisplayBookingDetail();
                         break;
                     case 4:
-                       HomePage.LoggedInStatus = false;
+                        PassengerRepository.CancelBooking();
                         break;
                     case 5:
+                       HomePage.LoggedInStatus = false;
+                        break;
+                    case 6:
                         Console.WriteLine("[WARN]  --Select a valid choice");
                         break;
                 }
